@@ -13,13 +13,57 @@
         <servlet-name>LifeCycleServlet</servlet-name>
         <servlet-class>com.gongjiajun.week3.demo.LifeCycleServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>com.gongjiajun.week3.demo.RegisterServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>gongjiajun</servlet-name>
-        <url-pattern>/hello</url-pattern><!-- url must start with / -->
+    <!--Register-->
+   <servlet>
+       <servlet-name>RegisterServlet</servlet-name>
+       <servlet-class>com.gongjiajun.week3.demo.RegisterServlet</servlet-class>
+   </servlet>
+    <!--JDBC-->
+   <servlet>
+       <servlet-name>JDBCDemoServlet</servlet-name>
+       <servlet-class>com.gongjiajun.week4.demo.JDBCDemoServlet</servlet-class>
+       <init-param>
+           <param-name>driver</param-name>
+           <param-value>com.microsoft.sqlserver.jdbc.SQLServerDriver</param-value>
+       </init-param>
+       <init-param>
+           <param-name>url</param-name>
+           <param-value>jdbc:sqlserver://localhost:1433;DatabaseName=userdb</param-value>
+       </init-param>
+       <init-param>
+           <param-name>username</param-name>
+           <param-value>sa</param-value>
+       </init-param>
+       <init-param>
+           <param-name>password</param-name>
+           <param-value>gjj123456789</param-value>
+       </init-param>
+       <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+       <servlet-name>JDBCDemoServlet</servlet-name>
+       <url-pattern>/jdbc</url-pattern>
+   </servlet-mapping>
+   <context-param>
+       <param-name>driver</param-name>
+       <param-value>com.microsoft.sqlserver.jdbc.SQLServerDriver</param-value>
+   </context-param>
+   <context-param>
+       <param-name>url</param-name>
+       <param-value>jdbc:sqlserver://localhost:1433;DatabaseName=userdb</param-value>
+   </context-param>
+   <context-param>
+       <param-name>username</param-name>
+       <param-value>sa</param-value>
+   </context-param>
+   <context-param>
+       <param-name>password</param-name>
+       <param-value>gjj123456789</param-value>
+   </context-param>
+
+   <servlet-mapping>
+       <servlet-name>gongjiajun</servlet-name>
+       <url-pattern>/hello</url-pattern><!-- url must start with / -->
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LifeCycleServlet</servlet-name>
