@@ -47,44 +47,47 @@ public class RegisterServlet extends HttpServlet {
         String gender = request.getParameter("gender"); //<input type="radio" name="gender">
         String birthdate = request.getParameter("birthdate"); //<input type="text" name="birthdate">
         PrintWriter writer=response.getWriter();
-        String sqlinsert = "insert into usertable values('" + username + "','" + password + "','" + email + "','" + gender + "','" + birthdate + "')";
-        String sqlselect ="select * from usertable";
+//        String sqlselect ="select * from usertable";
         String ID=request.getParameter("ID");
 
         try {
-            prepare = con.prepareStatement(sqlinsert);
-            prepare.setString(1,ID);
-            prepare.setString(2,username);
-            prepare.setString(3,password);
-            prepare.setString(4,email);
-            prepare.setString(5,gender);
-            prepare.setString(6,birthdate);
-            st=con.createStatement();
-            rs=st.executeQuery(sqlselect);
-            prepare.executeUpdate();
-            response.setContentType("text/html");
-            writer.println("<table border=\\\"2\\\"width=\\\"80%\\\"borderColor=\\\"yellow\\\"bgcolor=\\\"#ABE3F7\\\">");
-            writer.println("<tr>");
-            writer.println("<td>"+ID+"</td>");
-            writer.println("<td>"+username+"</td>");
-            writer.println("<td>"+password+"</td>");
-            writer.println("<td>"+email+"</td>");
-            writer.println("<td>"+gender+"</td>");
-            writer.println("<td>"+birthdate+"</td>");
-            writer.println("</tr>");
-            while (rs.next()){
-                writer.println("<tr>");
-                writer.println("<td>" + rs.getString("ID") + "</td>");
-                writer.println("<td>" + rs.getString("username") + "</td>");
-                writer.println("<td>" + rs.getString("password") + "</td>");
-                writer.println("<td>" + rs.getString("email") + "</td>");
-                writer.println("<td>" + rs.getString("gender") + "</td>");
-                writer.println("<td>" + rs.getDate("birthdate") + "</td>");
-                writer.println("</tr>");
-            }
-            writer.println("</table>");
-        } catch (SQLException e) {
+              String sqlinsert = "insert into usertable values('" + username + "','" + password + "','" + email + "','" + gender + "','" + birthdate + "')";
+//            String sqlselect ="select * from usertable";
+//            prepare = con.prepareStatement(sqlinsert);
+//            prepare.setString(1,ID);
+//            prepare.setString(2,username);
+//            prepare.setString(3,password);
+//            prepare.setString(4,email);
+//            prepare.setString(5,gender);
+//            prepare.setString(6,birthdate);
+//            st=con.createStatement();
+//            rs=st.executeQuery(sqlselect);
+//            prepare.executeUpdate();
+//            response.setContentType("text/html");
+//            writer.println("<table border=\\\"2\\\"width=\\\"80%\\\"borderColor=\\\"yellow\\\"bgcolor=\\\"#ABE3F7\\\">");
+//            writer.println("<tr>");
+//            writer.println("<td>"+ID+"</td>");
+//            writer.println("<td>"+username+"</td>");
+//            writer.println("<td>"+password+"</td>");
+//            writer.println("<td>"+email+"</td>");
+//            writer.println("<td>"+gender+"</td>");
+//            writer.println("<td>"+birthdate+"</td>");
+//            writer.println("</tr>");
+//            while (rs.next()){
+//                writer.println("<tr>");
+//                writer.println("<td>" + rs.getString("ID") + "</td>");
+//                writer.println("<td>" + rs.getString("username") + "</td>");
+//                writer.println("<td>" + rs.getString("password") + "</td>");
+//                writer.println("<td>" + rs.getString("email") + "</td>");
+//                writer.println("<td>" + rs.getString("gender") + "</td>");
+//                writer.println("<td>" + rs.getDate("birthdate") + "</td>");
+//                writer.println("</tr>");
+//            }
+//            writer.println("</table>");
+            request.getRequestDispatcher("userList.jsp").forward(request,response);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        response.sendRedirect("login.jsp");
     }
 }
