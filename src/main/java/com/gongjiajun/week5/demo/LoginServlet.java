@@ -1,5 +1,8 @@
 package com.gongjiajun.week5.demo;
 
+import com.gongjiajun.dao.UserDao;
+import com.gongjiajun.model.User;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -30,7 +33,7 @@ public class LoginServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+        request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request,response);
     }
 
     @Override
@@ -38,33 +41,50 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username"); //name of input type-<input type="text" name="username"><br/>
         String password = request.getParameter("password"); //<input type="text" name="password"><br/>
         System.out.println(username + password);
-        PrintWriter writer=response.getWriter();
-        try{
-            if (con != null) {
-                String sqlselect = "select * from usertable where username=? and password=?;";
-                prepare = con.prepareStatement(sqlselect);
-                prepare.setString(1,username);
-                prepare.setString(2,password);
-                rs = prepare.executeQuery();
-                if (rs.next()){
-//                    writer.println("Login Success!!!");
-//                    writer.println("Welcome,"+username);
-                    request.setAttribute("ID",rs.getInt("id"));
-                    request.setAttribute("Username",rs.getString("name"));
-                    request.setAttribute("Password",rs.getString("password"));
-                    request.setAttribute("Email",rs.getString("email"));
-                    request.setAttribute("Gender",rs.getString("gender"));
-                    request.setAttribute("Birthdate",rs.getDate("birthdate"));
-                    request.getRequestDispatcher("userinfo.jsp").forward(request, response);
-                }else{
-                    request.setAttribute("msg" ,"username or password Error");
-                    request.getRequestDispatcher("login.jsp").forward(request,response);
-                    //  writer.print("Username or Password Error!!!");
-
-                }
+//        PrintWriter writer=response.getWriter();
+        UserDao userDao=new UserDao();
+        try {
+            User user= userDao.findByUsernamePassword(con,username,password);
+            if(user!=null){
+                request.setAttribute("user",user);
+                request.getRequestDispatcher("WEB-INF/views/userinfo.jsp").forward(request,response);
+            }else {
+                request.setAttribute("msg" ,"username or password Error");
+                request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request,response);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+//        try {
+//            if( con != null){
+////                String sql = "SELECT * FROM usertable WHERE name=? AND password=?;";
+////                PreparedStatement ps = con.prepareStatement(sql);
+////                ps.setString(1,username);
+////                ps.setString(2,password);
+////                ResultSet rs = ps.executeQuery();
+////                if(rs.next()){
+////                    // writer.println("Login Success!!!");
+////                    // writer.println("Welcome "+name+".");
+////                    request.setAttribute("ID",rs.getInt("id"));
+////                    request.setAttribute("Username",rs.getString("name"));
+////                    request.setAttribute("Password",rs.getString("password"));
+////                    request.setAttribute("Email",rs.getString("email"));
+////                    request.setAttribute("Gender",rs.getString("gender"));
+////                    request.setAttribute("Birthdate",rs.getDate("birthdate"));
+////                    request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+////                }else{
+////                    request.setAttribute("msg" ,"username or password Error");
+////                    request.getRequestDispatcher("login.jsp").forward(request,response);
+////                    //  writer.print("Username or Password Error!!!");
+////                }
+////            }
+////        }catch (Exception e) {
+////            System.out.println(e);
+////        }
+////    }
+//}
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 }

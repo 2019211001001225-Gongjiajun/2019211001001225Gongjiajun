@@ -8,36 +8,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
-//@WebListener()
+@WebListener()
 public class JDBCServletContextListener implements ServletContextListener {
-
-    public JDBCServletContextListener() {
-        System.out.println("--");
-    }
-
-
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        Connection dbConn;
-        ServletContext c = sce.getServletContext();
-//        System.out.println("进入了contextInitialized方法");
-//        System.out.println(c.getInitParameter("url"));
+        Connection con;
+        ServletContext context = sce.getServletContext();
+        String driver=context.getInitParameter("driver");
+        String url=context.getInitParameter("url");
+        String username=context.getInitParameter("username");
+        String password=context.getInitParameter("password");
         try {
-            Class.forName(c.getInitParameter("driver"));
-            dbConn = DriverManager.getConnection(c.getInitParameter("url"),
-                    c.getInitParameter("Username"),
-                    c.getInitParameter("Password"));
-            c.setAttribute("dbConn",dbConn);
-//            System.out.println(dbConn);
-        } catch (Exception e) {
+            Class.forName(driver);
+            con = DriverManager.getConnection(url,username,password);
+            context.setAttribute("con",con);
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
 
     }
-
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-
+        sce.getServletContext().removeAttribute("con");
     }
 }
