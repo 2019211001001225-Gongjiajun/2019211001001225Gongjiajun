@@ -31,8 +31,7 @@ public class UserDao implements IUserDao{
 
     @Override
     public int updateUser(Connection con, User user) throws SQLException {
-        String sql="update usertable set Username='"+user.getUsername()+"'"+","+"Gender='"+user.getGender()+"'"+","+"Password='"+user.getPassword()+"'"
-                +","+"Email='"+user.getEmail()+"'"+","+"Birthdate='"+user.getBirthdate()+"'"+"where ID='"+user.getID()+"'";
+        String sql="update usertable set Username='"+user.getUsername()+"',Gender='"+user.getGender()+"',Password='"+user.getPassword()+"',Email='"+user.getEmail()+"',Birthdate='"+user.getBirthdate()+"' where ID='"+user.getID()+"'";
         PreparedStatement st=con.prepareStatement(sql);
         int result=st.executeUpdate();
         return result;
@@ -40,21 +39,26 @@ public class UserDao implements IUserDao{
 
     @Override
     public User findById(Connection con, Integer id) throws SQLException {
-        String sql="select * from usertable where ID='"+id+"'";
-        PreparedStatement st=con.prepareStatement(sql);
-        ResultSet result=st.executeQuery();
-        User user=null;
-        while(result.next()){
-            user=new User();
-            user.setID(result.getInt("ID"));
-            user.setUsername(result.getString("UserName"));
-            user.setPassword(result.getString("Password"));
-            user.setEmail(result.getString("Email"));
-            user.setGender(result.getString("Gender"));
-            user.setBirthdate(result.getDate("Birthdate"));
+        String sql = "SELECT * FROM usertable WHERE id = ?;";
+        PreparedStatement st = con.prepareStatement(sql);
+        st.setInt(1, id);
+
+        ResultSet rs = st.executeQuery();
+        User user = null;
+        if (rs.next()) {
+            user = new User();
+            user.setID(rs.getInt("id"));
+            user.setUsername(rs.getString("name"));
+            user.setBirthdate(rs.getDate("birthdate"));
+            user.setPassword(rs.getString("password"));
+            user.setEmail(rs.getString("email"));
+            user.setGender(rs.getString("gender"));
+            return user;
+        } else {
+            return null;
         }
-        return user;
     }
+
 
     @Override
     public User findByUsernamePassword(Connection con, String username, String password) throws SQLException {
