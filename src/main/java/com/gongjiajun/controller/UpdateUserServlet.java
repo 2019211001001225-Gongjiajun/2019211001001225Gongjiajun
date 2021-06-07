@@ -17,15 +17,16 @@ public class UpdateUserServlet extends HttpServlet {
     Connection con = null;
     @Override
     public void init() throws ServletException {
-        con=(Connection)getServletContext().getAttribute("con");
+        con =(Connection)getServletContext().getAttribute("dbConn");
+
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Integer id = Integer.valueOf(request.getParameter("id"));
-        IUserDao IUserDao = new UserDao();
+        IUserDao iUserDao = new UserDao();
         try {
-            User userInfo = IUserDao.findById(con, id);
+            User userInfo = iUserDao.findById(con, id);
             request.setAttribute("userInfo",userInfo);
             request.getRequestDispatcher("WEB-INF/views/updateUesr.jsp").forward(request, response);
         } catch (SQLException throwables) {
@@ -35,23 +36,25 @@ public class UpdateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String name,password,email,gender;
         Integer id = Integer.valueOf(request.getParameter("id"));
-        String username=request.getParameter("username");
-        String password=request.getParameter("password");
-        String Email=request.getParameter("email");
-        String Gender=request.getParameter("gender");
+        name = request.getParameter("username");
+        password = request.getParameter("password");
+        email = request.getParameter("email");
+        gender = request.getParameter("gender");
         Date date = Date.valueOf(request.getParameter("birth"));
-        User user = new User(id, username, password, Email, Gender, date);
+        User user = new User(id, name, password, email, gender, date);
 
-        IUserDao IUserDao = new UserDao();
+        IUserDao iUserDao = new UserDao();
         try {
-            int i = IUserDao.updateUser(con, user);
+            int i = iUserDao.updateUser(con, user);
             if (i != 0){
-                request.getSession().setAttribute("user",IUserDao.findById(con,id));
-                request.getRequestDispatcher("WEB-INF/views/userinfo.jsp").forward(request, response);
+                request.getSession().setAttribute("user",iUserDao.findById(con,id));
+//                request.getRequestDispatcher("WEB-INF/views/userinfo.jsp").forward(request, response);
+                request.getRequestDispatcher("accountDetails").forward(request, response);
             }else {
-                request.setAttribute("message","Update Error");
-                request.getRequestDispatcher("WEB-INF/views/updateUser.jsp").forward(request, response);
+                request.setAttribute("message","update Error!!!");
+                request.getRequestDispatcher("WEB-INF/views/userinfo.jsp").forward(request, response);
             }
 
         } catch (SQLException throwables) {
